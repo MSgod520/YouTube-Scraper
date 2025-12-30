@@ -1,0 +1,59 @@
+name: Build iOS IPA
+on:
+  workflow_dispatch: # 手动触发
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.x'
+          channel: 'stable'
+      - name: Install Dependencies
+        run: |
+          pip install flet
+          pip install -r requirements.txt
+      - name: Build Runner.app (Unsigned)
+        run: |
+          # 使用环境变量强制允许无签名构建
+          # 这通常会生成一个 .app 文件夹而不是 .ipa 文件
+          yes | flet build ipa --verbose
+        env:
+          CODE_SIGNING_ALLOWED: "NO"
+          CODE_SIGNING_REQUIRED: "NO"
+          CODE_SIGNING_IDENTITY: ""
+      - name: Package Fake IPA
+        run: |
+          echo "Looking for Runner.app..."
+          find . -name "Runner.app" -type d
+          
+          # 创建标准的 Payload 目录结构
+          mkdir Payload
+          
+          # 将生成的 Runner.app 复制到 Payload 中
+          # Flet 通常将其构建在 build/iphoneos/Runner.app 或类似位置
+          # 我们使用 find 命令自动找到它
+          APP_PATH=$(find . -name "Runner.app" -type d | head -n 1)
+          
+          if [ -z "$APP_PATH" ]; then
+            echo "Error: Runner.app not found!"
+            exit 1
+          fi
+          
+          echo "Found app at: $APP_PATH"
+          cp -R "$APP_PATH" Payload/
+          
+          # 压缩成 IPA
+          zip -r -y unsigned_app.ipa Payload/
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-app-release
+          path: unsigned_app.ipa
