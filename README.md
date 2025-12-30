@@ -21,11 +21,11 @@
 
 ## 🛠 Features / 功能特点
 
-*   📥 **High Quality Video**: Support downloading videos up to 4K/8K resolution. (支持最高 4K/8K 画质下载)
-*   🎵 **Audio Extraction**: Convert video to high-quality MP3 automatically. (自动提取并转换高音质 MP3)
-*   🖼️ **Thumbnail**: View and download video thumbnails. (一键获取高清封面)
-*   ⏸️ **Resume Capability**: Pause and resume downloads at any time. (支持断点续传)
-*   ⚡ **Single-Thread Stability**: Optimized for stability with auto-rename for duplicate files. (优化的单线程下载，自动处理重名文件)
+*   📥 **High Quality Video**: Support downloading videos up to 4K/8K resolution. 支持最高 4K/8K 画质下载
+*   🎵 **Audio Extraction**: Convert video to high-quality MP3 automatically. 自动提取并转换高音质 MP3
+*   🖼️ **Thumbnail**: View and download video thumbnails. 一键获取高清封面
+*   ⏸️ **Resume Capability**: Pause and resume downloads at any time. 支持断点续传
+*   ⚡ **Single-Thread Stability**: Optimized for stability with auto-rename for duplicate files. 优化的下载线程，自动处理重名文件
 
 ---
 
@@ -39,7 +39,8 @@
 
 ## 📦 Build & Deployment / 构建指南
 
-We provide GitHub Actions workflows for automated building. (本项目提供 GitHub Actions 自动化构建脚本)
+We provide GitHub Actions workflows for automated building. 
+本项目提供 GitHub Actions 自动化构建脚本
 
 ### Android APK
 1.  Upload code to GitHub.
@@ -51,7 +52,8 @@ We provide GitHub Actions workflows for automated building. (本项目提供 Git
 1.  Go to **Actions** -> **Build iOS IPA**.
 2.  Click **Run workflow**.
 3.  Download `unsigned_app.ipa`.
-4.  **Note**: This IPA is unsigned. You must use **AltStore** to sideload it onto your device. (生成的 IPA 未签名，必须使用 AltStore 自签安装)
+4.  **Note**: This IPA is unsigned. You must use **AltStore** to sideload it onto your device. 
+生成的 IPA 未签名，必须使用 AltStore 自签安装
 
 ---
 
