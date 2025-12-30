@@ -17,29 +17,26 @@ jobs:
           flutter-version: '3.24.x'
           channel: 'stable'
       - name: Install Dependencies
+        working-directory: ./mobile_app
         run: |
           pip install flet
           pip install -r requirements.txt
       - name: Build Runner.app (Unsigned)
+        working-directory: ./mobile_app
         run: |
-          # 使用环境变量强制允许无签名构建
-          # 这通常会生成一个 .app 文件夹而不是 .ipa 文件
           yes | flet build ipa --verbose
         env:
           CODE_SIGNING_ALLOWED: "NO"
           CODE_SIGNING_REQUIRED: "NO"
           CODE_SIGNING_IDENTITY: ""
       - name: Package Fake IPA
+        working-directory: ./mobile_app
         run: |
           echo "Looking for Runner.app..."
           find . -name "Runner.app" -type d
           
-          # 创建标准的 Payload 目录结构
           mkdir Payload
-          
-          # 将生成的 Runner.app 复制到 Payload 中
-          # Flet 通常将其构建在 build/iphoneos/Runner.app 或类似位置
-          # 我们使用 find 命令自动找到它
+          # 在 mobile_app 目录下寻找 build 产物
           APP_PATH=$(find . -name "Runner.app" -type d | head -n 1)
           
           if [ -z "$APP_PATH" ]; then
@@ -50,10 +47,9 @@ jobs:
           echo "Found app at: $APP_PATH"
           cp -R "$APP_PATH" Payload/
           
-          # 压缩成 IPA
           zip -r -y unsigned_app.ipa Payload/
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
           name: ios-app-release
-          path: unsigned_app.ipa
+          path: mobile_app/unsigned_app.ipa

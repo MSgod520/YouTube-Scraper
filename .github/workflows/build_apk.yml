@@ -17,20 +17,21 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.x' # 更新为 Flet 要求的较新版本
+          flutter-version: '3.24.x'
           channel: 'stable'
       - name: Install Dependencies
+        working-directory: ./mobile_app
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake
           pip install flet
           pip install -r requirements.txt
       - name: Build APK (Non-interactive)
+        working-directory: ./mobile_app
         run: |
-          # 使用 yes 命令自动回答所有提示 "y"
           yes | flet build apk --verbose
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: build/apk/**/*.apk
+          path: mobile_app/build/apk/**/*.apk
